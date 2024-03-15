@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { configureStore } from "@reduxjs/toolkit";
-import noteReducer from "./reducers/noteReducer";
+import noteReducer, { setNotes } from "./reducers/noteReducer";
 import filterReducer from "./reducers/filterReducer";
 import Notes from "./components/Notes";
 import NewNote from "./components/NewNote";
 import VisibilityFilter from "./components/VisibilityFilter";
 import { Provider } from "react-redux";
+import noteService from "./services/notes";
+import { useDispatch } from "react-redux";
 
 const store = configureStore({
   reducer: {
@@ -16,6 +18,10 @@ const store = configureStore({
 });
 
 const App = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    noteService.getAll().then((notes) => dispatch(setNotes(notes)));
+  }, []);
   return (
     <div>
       <NewNote />
